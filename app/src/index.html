@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html ng-app="playersApp">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            /*input.ng-invalid-required {
+                border: 1px solid red;
+            }*/
+        </style>
+    </head>
+    <body>
+
+        <div class="container" ng-controller="playerCtrl">
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-horizontal" name="addPlayerForm" novalidate>
+                        <legend>Список футболистов</legend>
+                          <div class="form-group" ng-class="{'has-error': addPlayerForm.pName.$error.required && addPlayerForm.pName.$dirty}">
+                            <label for="playerName" class="col-sm-4 control-label">Имя игрока</label>
+                            <div class="col-sm-8">
+                              <input type="text" required name="pName" ng-model="playerName" class="form-control" id="playerName" placeholder="Имя игрока">
+                              <span class="error" ng-show="addPlayerForm.pName.$dirty && addPlayerForm.pName.$error.required">Введите имя игрока!</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                           <label for="playerTeam" class="col-sm-4 control-label">В какой команде играет</label>
+                           <select name="teams" id="teams">
+                           <option value="Placebo">Placebo</option>
+                           <option value="ImagineDragons">Imagine Dragons</option>
+                           <option value="Coldplay">Coldplay</option>
+                            <option value="Muse">Muse</option>
+							<option value="Nothing But Thieves">Nothing But Thieves</option>
+                            </select>
+                          </div>
+                          <div class="form-group" ng-class="{'has-error': addPlayerForm.pCountry.$error.required && addPlayerForm.pCountry.$dirty}">
+                            <label for="playerCountry" class="col-sm-4 control-label">Гражданство</label>
+							 <select name="citizenship" id="citizenship">
+                           <option value="Moldova">Moldova</option>
+                           <option value="The Netherland">The Netherlands</option>
+                           <option value="Norway">Norway</option>
+                            <option value="UK">UK</option>
+							<option value="US">US</option>
+                            </select>
+							
+							<div class="form-group" ng-class="{'has-error': addPlayerForm.pCountry.$error.required && addPlayerForm.pCountry.$dirty}">
+                            <label for="isMarried" class="col-sm-4 control-label">Семейный статус</label>
+							 <select name="isMarried" id="isMarried">
+                           <option value="Yes">Married</option>
+                           <option value="No">Single</option>
+                            </select>
+							
+							<div class="form-group" ng-class="{'has-error': addPlayerForm.pCountry.$error.required && addPlayerForm.pCountry.$dirty}">
+                            <label for="sex" class="col-sm-4 control-label">Пол</label>
+							 <select name="sex" id="sex">
+                           <option value="M">Male</option>
+                           <option value="F">Female</option>
+                            </select>
+                        
+                          </div>
+                          <div class="form-group">
+                            <label for="playerGoals" class="col-sm-4 control-label">Сколько голов забил</label>
+                            <div class="col-sm-8">
+                              <input type="text" name="pGoals" ng-model="playerGoals" class="form-control" id="playerGoals" placeholder="Сколько голов забил">
+                            </div>
+                          </div>
+						  
+						     <div class="form-group">
+                            <label for="age" class="col-sm-4 control-label">Возраст</label>
+                            <div class="col-sm-8">
+                              <input type="text" name="pAge" ng-model="playerAge" class="form-control" id="playerAge" placeholder="Возраст">
+                            </div>
+                          </div>
+						  
+						   <div class="form-group">
+                            <label for="salary" class="col-sm-4 control-label">Зарплата</label>
+                            <div class="col-sm-8">
+                              <input type="text" name="pSalary" ng-model="playerSalary" class="form-control" id="playerSalary" placeholder="Зарплата">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="col-sm-8 col-sm-offset-4">
+                                  <button ng-disabled="addPlayerForm.pName.$invalid || addPlayerForm.pCountry.$invalid" ng-click="addPlayer(playerName, playerTeam, playerCountry, playerGoals)" class="btn btn-default">Добавить</button>
+                              </div>
+                          </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" name="pSelect" ng-model="selectPlayers" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th ng-click="sortByName('name')">Игрок</th>
+                                <th>Команда</th>
+                                <th>Гражданство</th>
+								<th>Пол</th>
+								<th>Возраст</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="player in players | goalsFilter">
+                                <td>{{player.name}}</td>
+                                <td>{{player.team}}</td>
+                                <td>{{player.country}}</td>
+                                <td>{{player.salary}}</td>
+								<td>{{player.age}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script src="angular.js"></script>
+        <script>
+            var app = angular.module("playersApp", []);
+
+            var model = [];
+
+
+            app.controller("playerCtrl", function($scope){
+                $scope.players = model;
+                $scope.orderByFunction = function(player){
+                    return parseInt(player.goals);
+                };
+                $scope.addPlayer = function(playerName, playerTeam, playerCountry, playerGoals, playerSalary, playerAge ) {
+                    $scope.players.push({name: playerName, team: playerTeam, country: playerCountry, goals: playerGoals, salary:playerSalary, age:playerAge});
+                }
+
+                $scope.sortByName = function(p) {
+                    $scope.nameSorting = p;
+                }
+
+            });
+
+            app.filter("ageFilter", function() {
+                return function(item) {
+                
+                    for(i=0; i<item.length; i++) {
+                        if(item[i].age > 35) {
+						colsone.error("Возраст игрока больше 35 лет")
+                            return;
+                        }
+                    }
+                    
+                }
+            });
+        </script>
+
+    </body>
+</html>
